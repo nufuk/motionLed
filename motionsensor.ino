@@ -58,14 +58,33 @@ void setup() {
   ws2812fx.service();
 }
 
+void errorBlink() {
+  ws2812fx.setMode(FX_MODE_STATIC);
+  ws2812fx.setColor(red, green, blue);
+  ws2812fx.setBrightness(50);
+  ws2812fx.service();
+  delay(3000);
+  ws2812fx.setMode(FX_MODE_BLINK);
+  ws2812fx.setColor(0, 0, 0);
+  ws2812fx.setBrightness(50);
+  ws2812fx.service();
+}
+
 String getTwilight(String twilight) {
   // TODO https
+  // e.g. Stuttgart / Germany:
+  // http://api.sunrise-sunset.org/json?lat=48.783333&lng=9.183333&date=today&formatted=0
+  
   String uriString = "http://api.sunrise-sunset.org/json?lat=xx.xxxxxx&lng=xx.xxxxxx&date=today&formatted=0";
   httpClientSunriseSunset.begin(uriString);
   httpClientSunriseSunset.addHeader("Content-Type", "text/html");
 
   //TODO if != 200 error
   int httpCode = httpClientSunriseSunset.GET();
+  
+  if(httpCode != 200 {
+    errorBlink(); 
+  }
   
   const size_t bufferSize = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 480;
   DynamicJsonBuffer jsonBuffer(bufferSize);
@@ -120,22 +139,23 @@ HourMinute getCurrentTime() {
   return hourAndMinute;
 }
 
-bool checkTime(HourMinute currentTime, HourMinute twillight, bool later) {
-  if (later) {
-    if(currentTime.hour > twillight.hour) {
-      return true;
-    } else if (currentTime.hour == twillight.hour) {
-      return currentTime.minute >= twillight.minute;
-    } else {
-      return false;
-    }
-  } else {
+bool checkTime(HourMinute currentTime, HourMinute twillight, bool sunDown) {
+  // must be in between twillight beginn or end
+  if (sunDown) {
     if(currentTime.hour < twillight.hour) {
-      return true;
+      return false;
     } else if (currentTime.hour == twillight.hour) {
       return currentTime.minute <= twillight.minute;
     } else {
+      return true;
+    }
+  } else {
+    if(currentTime.hour > twillight.hour) {
       return false;
+    } else if (currentTime.hour == twillight.hour) {
+      return currentTime.minute >= twillight.minute;
+    } else {
+      return true;
     }
   }
 }
@@ -150,7 +170,7 @@ void loop() {
     HourMinute twilightBegin = getTwilightBegin();
     HourMinute twilightEnd = getTwilightEnd();
     
-    if(checkTime(currentTime, twilightEnd, true) ||  checkTime(currentTime, twilightBegin, false)) {
+    if(checkTime(currentTime, twilightEnd, true) && checkTime(currentTime, twilightBegin, false)) {
       Serial.println("checkTime");
       ws2812fx.setMode(FX_MODE_STATIC);
       ws2812fx.setColor(red, green, blue);
