@@ -126,7 +126,12 @@ HourMinute getCurrentTime() {
   //Get current UTC time form API
   httpClientWorldApi.begin("http://worldtimeapi.org/api/timezone/Etc/UTC");
   httpClientWorldApi.addHeader("Content-Type", "text/html");
+  
   int httpCode = httpClientWorldApi.GET();
+  if(httpCode != 200 {
+    errorBlink(); 
+  }
+  
   const size_t bufferSize = JSON_OBJECT_SIZE(1) + JSON_OBJECT_SIZE(2) + JSON_OBJECT_SIZE(3) + 370;
   DynamicJsonBuffer jsonBuffer(bufferSize);
   JsonObject& root = jsonBuffer.parseObject(httpClientWorldApi.getString());
