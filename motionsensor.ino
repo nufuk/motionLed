@@ -181,9 +181,9 @@ void loop() {
       ws2812fx.setColor(red, green, blue);
       ws2812fx.setBrightness(20);
       ws2812fx.service();
+      delay(waitTimeMS);
     }
     
-    delay(waitTimeMS);
     ws2812fx.setMode(FX_MODE_STATIC);
     ws2812fx.setColor(0, 0, 0);
     ws2812fx.setBrightness(0);
