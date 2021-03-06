@@ -82,7 +82,7 @@ String getTwilight(String twilight) {
   //TODO if != 200 error
   int httpCode = httpClientSunriseSunset.GET();
   
-  if(httpCode != 200 {
+  if(httpCode != 200) {
     errorBlink(); 
   }
   
@@ -128,7 +128,7 @@ HourMinute getCurrentTime() {
   httpClientWorldApi.addHeader("Content-Type", "text/html");
   
   int httpCode = httpClientWorldApi.GET();
-  if(httpCode != 200 {
+  if(httpCode != 200) {
     errorBlink(); 
   }
   
