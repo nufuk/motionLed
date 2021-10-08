@@ -2,22 +2,18 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
-
-#define IrSensor      D7
-#define PIN           D8
-#define NUMPIXELS     61
+//copy from default.h and put in your own values
+#include "properties.h"
 
 WS2812FX ws2812fx = WS2812FX(NUMPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 HTTPClient httpClientSunriseSunset;
 HTTPClient httpClientWorldApi;
 
 int movement = 0;
-char* ssid = "<insertSSID";
-char* password = "<insertPaswd>";
 const int waitTimeMS = 20000;
-const int red = 100;
-const int green = 0;
-const int blue = 0;
+const int red = 250;
+const int green = 100;
+const int blue = 5;
 
 struct hourMinute {
   int hour;
